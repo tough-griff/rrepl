@@ -1,0 +1,23 @@
+{
+  "name": "rrepl",
+  "version": "1.0.0",
+  "description": "An improved node REPL with support for a .noderc file and global package installs.",
+  "keywords": [
+    "REPL"
+  ],
+  "author": "Griffin Yourick <gryphon92@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tough-griff/rrepl.git"
+  },
+  "main": "index.js",
+  "bin": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "semver": "^6.2.0"
+  }
+}
