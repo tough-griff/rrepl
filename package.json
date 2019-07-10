@@ -1,7 +1,7 @@
 {
   "name": "rrepl",
   "version": "1.0.0",
-  "description": "An improved node REPL with support for a .noderc file and global package installs.",
+  "description": "An improved node REPL with support for configuration.",
   "keywords": [
     "REPL"
   ],
@@ -13,6 +13,9 @@
   },
   "main": "index.js",
   "bin": "index.js",
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "lint": "eslint index.js",
     "start": "node index.js",
