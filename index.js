@@ -7,7 +7,7 @@ const path = require('path');
 const repl = require('repl');
 const semver = require('semver');
 
-const rreplStr = [
+const RREPL_STRING = [
   chalk.red('r'),
   chalk.yellow('r'),
   chalk.green('e'),
@@ -15,21 +15,21 @@ const rreplStr = [
   chalk.magenta('l')
 ].join('');
 
-console.log(`Welcome to ${rreplStr} v1.0.0 (Node.js ${process.version})`);
+const { NODE_REPL_HISTORY, NODE_REPL_MODE } = process.env;
+const { REPL_MODE_SLOPPY } = repl;
+
+console.log(`Welcome to ${RREPL_STRING} v1.0.0 (Node.js ${process.version})`);
 console.log(chalk.gray('Type ".help" for more information.'));
 const replServer = repl.start({
-  replMode: process.env.NODE_REPL_MODE || repl.REPL_MODE_SLOPPY
+  replMode: NODE_REPL_MODE || REPL_MODE_SLOPPY
 });
 
 const home = os.homedir();
 
-if (
-  semver.gt(process.version, '11.10.0') &&
-  process.env.NODE_REPL_HISTORY !== ''
-) {
+if (semver.gt(process.version, '11.10.0') && NODE_REPL_HISTORY !== '') {
   replServer.setupHistory(
-    process.env.NODE_REPL_HISTORY || path.join(home, '.node_repl_history'),
-    function(err, server) {
+    NODE_REPL_HISTORY || path.join(home, '.node_repl_history'),
+    (err, server) => {
       if (err) throw err;
     }
   );
