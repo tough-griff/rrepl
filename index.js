@@ -7,6 +7,8 @@ const path = require('path');
 const repl = require('repl');
 const semver = require('semver');
 
+const { version } = require('./package.json');
+
 const RREPL_STRING = [
   chalk.red('r'),
   chalk.yellow('r'),
@@ -18,7 +20,7 @@ const RREPL_STRING = [
 const { NODE_REPL_HISTORY, NODE_REPL_MODE } = process.env;
 const { REPL_MODE_SLOPPY } = repl;
 
-console.log(`Welcome to ${RREPL_STRING} v1.0.0 (Node.js ${process.version})`);
+console.log(`Welcome to ${RREPL_STRING} v${version} (Node.js ${process.version})`);
 console.log(chalk.gray('Type ".help" for more information.'));
 const replServer = repl.start({
   replMode: NODE_REPL_MODE || REPL_MODE_SLOPPY
