@@ -1,4 +1,4 @@
-# rrepl
+# rrepl [![npm](https://img.shields.io/npm/v/rrepl.svg)](https://www.npmjs.com/package/rrepl)
 > An improved node REPL with support for configuration.
 
 ## Usage
