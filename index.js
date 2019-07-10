@@ -20,12 +20,12 @@ const RREPL_STRING = [
 ].join('');
 
 const { NODE_REPL_HISTORY, NODE_REPL_MODE } = process.env;
-const { REPL_MODE_SLOPPY } = repl;
+const { REPL_MODE_SLOPPY, REPL_MODE_STRICT } = repl;
 
 console.log(`Welcome to ${RREPL_STRING} v${VERSION} (Node.js ${NODE_VERSION})`);
 console.log(chalk.gray('Type ".help" for more information.'));
 const replServer = repl.start({
-  replMode: NODE_REPL_MODE || REPL_MODE_SLOPPY,
+  replMode: NODE_REPL_MODE === 'strict' ? REPL_MODE_STRICT : REPL_MODE_SLOPPY,
   useGlobal: true,
 });
 
