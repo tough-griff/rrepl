@@ -45,18 +45,15 @@ if (semver.gt(NODE_VERSION, '11.10.0') && NODE_REPL_HISTORY !== '') {
   );
 }
 
-/* eslint-disable global-require, import/no-dynamic-require */
 const nodercPath = commander.config ? path.resolve(commander.config) : path.join(home, '.noderc');
 if (fs.existsSync(nodercPath)) {
   try {
+    /* eslint-disable-next-line global-require, import/no-dynamic-require */
     const noderc = require(nodercPath);
     if (typeof noderc === 'function') noderc(replServer);
   } catch (err) {
     console.log();
-    console.error(
-      'An error occurred while loading your configuration file (%s):',
-      nodercPath,
-    );
+    console.error('An error occurred while loading your configuration file (%s):', nodercPath);
     console.error(err);
     process.exit(1);
   }

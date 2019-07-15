@@ -16,9 +16,11 @@
   "files": [
     "index.js"
   ],
+  "engines": {
+    "node": ">= 8.0.0"
+  },
   "scripts": {
-    "lint": "eslint index.js",
-    "start": "node index.js",
+    "start": "node index",
     "test": "node index -c .noderc.example"
   },
   "dependencies": {
@@ -30,6 +32,8 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.0",
+    "husky": "^3.0.0",
+    "lint-staged": "^9.2.0",
     "lodash": "^4.17.14"
   },
   "eslintConfig": {
@@ -45,5 +49,16 @@
         }
       ]
     }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js|.noderc.*": [
+      "eslint --no-ignore --fix",
+      "git add"
+    ]
   }
 }

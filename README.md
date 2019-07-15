@@ -1,7 +1,9 @@
 # rrepl [![npm](https://img.shields.io/npm/v/rrepl.svg)](https://www.npmjs.com/package/rrepl)
+
 > An improved node REPL with support for configuration.
 
 ## Usage
+
 ```sh
 npm install -g rrepl
 rrepl
@@ -14,8 +16,13 @@ npx rrepl
 ```
 
 ## Configuration
+
 Add a `.noderc` file in your home directory. You can also specify a different
-configuration file with the `-c` or `--config` option.
+configuration file with the `-c` or `--config` option. The `.noderc` file should
+export a function which takes a
+[`REPLServer`](https://nodejs.org/api/repl.html#repl_class_replserver) instance
+as its argument. This callback is invoked when `rrepl` is run, thus configuring
+your environment.
 
 ```js
 module.exports = repl => {
@@ -27,6 +34,7 @@ See [_.noderc.example_](https://github.com/tough-griff/rrepl/blob/master/.noderc
 as a sample of what you can do with `rrepl`!
 
 ### NODE_OPTIONS
+
 You can pass additional arguments to `node` with the
 [`NODE_OPTIONS`](https://nodejs.org/api/cli.html#cli_node_options_options)
 environment variable. For example, run:
