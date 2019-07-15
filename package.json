@@ -19,16 +19,18 @@
   "scripts": {
     "lint": "eslint index.js",
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node index -c .noderc.example"
   },
   "dependencies": {
     "chalk": "^2.4.2",
+    "commander": "^2.20.0",
     "semver": "^6.2.0"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
-    "eslint-plugin-import": "^2.18.0"
+    "eslint-plugin-import": "^2.18.0",
+    "lodash": "^4.17.14"
   },
   "eslintConfig": {
     "extends": [

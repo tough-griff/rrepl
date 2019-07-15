@@ -6,24 +6,33 @@
 npm install -g rrepl
 rrepl
 ```
-OR
+
+or
+
 ```sh
 npx rrepl
 ```
 
 ## Configuration
-Add a `.noderc` file in your home directory
+Add a `.noderc` file in your home directory. You can also specify a different
+configuration file with the `-c` or `--config` option.
 
 ```js
-module.exports = (repl) => {
+module.exports = repl => {
   repl.setPrompt('>> ');
 };
 ```
 
+See [_.noderc.example_](https://github.com/tough-griff/rrepl/blob/master/.noderc.example)
+as a sample of what you can do with `rrepl`!
+
+### NODE_OPTIONS
 You can pass additional arguments to `node` with the
 [`NODE_OPTIONS`](https://nodejs.org/api/cli.html#cli_node_options_options)
 environment variable. For example, run:
+
 ```sh
 env NODE_OPTIONS="--experimental-repl-await" rrepl
 ```
+
 to enable top-level await keyword support.
