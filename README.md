@@ -25,7 +25,7 @@ as its argument. This callback is invoked when `rrepl` is run, thus configuring
 your environment.
 
 ```js
-module.exports = repl => {
+module.exports = (repl) => {
   repl.setPrompt('>> ');
 };
 ```
