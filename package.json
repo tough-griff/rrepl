@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "description": "An improved node REPL with support for configuration.",
   "keywords": [
+    "cli",
     "REPL"
   ],
   "author": "Griffin Yourick <gryphon92@gmail.com>",
@@ -21,20 +22,20 @@
   },
   "scripts": {
     "start": "node index",
-    "test": "node index -c .noderc.example"
+    "test": "node index -c .noderc.test"
   },
   "dependencies": {
     "chalk": "^2.4.2",
-    "commander": "^2.20.0",
-    "semver": "^6.2.0"
+    "commander": "^3.0.0",
+    "semver": "^6.3.0"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.2.0",
-    "eslint-plugin-import": "^2.18.0",
-    "husky": "^3.0.0",
-    "lint-staged": "^9.2.0",
-    "lodash": "^4.17.14"
+    "eslint": "^6.2.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "husky": "^3.0.4",
+    "lint-staged": "^9.2.3",
+    "lodash": "^4.17.15"
   },
   "eslintConfig": {
     "extends": [
