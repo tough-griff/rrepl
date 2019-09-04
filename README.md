@@ -1,4 +1,4 @@
-# rrepl [![npm](https://img.shields.io/npm/v/rrepl.svg)](https://www.npmjs.com/package/rrepl)
+# rrepl [![npm](https://img.shields.io/npm/v/rrepl.svg)](https://www.npmjs.com/package/rrepl) [![Actions Status](https://github.com/tough-griff/rrepl/workflows/Test/badge.svg)](https://github.com/tough-griff/rrepl/actions)
 
 > An improved node REPL with support for configuration.
 
