@@ -3,8 +3,8 @@
 const chalk = require('chalk');
 const _ = require('lodash'); // eslint-disable-line import/no-extraneous-dependencies
 
-const defaultValCb = i => i + 1;
-const defaultKeyCb = c => String.fromCharCode(96 + (c + 1));
+const defaultValCb = (i) => i + 1;
+const defaultKeyCb = (c) => String.fromCharCode(96 + (c + 1));
 
 function initializeContext(ctx) {
   Object.defineProperty(ctx, '_', {
@@ -39,7 +39,6 @@ module.exports = (repl) => {
      * @param {(num: number) => any} valCb
      * @returns {{string: any}}
      */
-
     value: function toy(n = 10, keyCb = defaultKeyCb, valCb = defaultValCb) {
       const keyArray = Array.toy(n, keyCb);
       const valArray = Array.toy(n, valCb);
