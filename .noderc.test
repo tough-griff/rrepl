@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
-const { strict: assert } = require('assert');
+// assert.strict is added in v9.9.0, we run against node 8.
+const assert = require('assert');
 const { REPLServer } = require('repl');
 
 module.exports = repl => {
   try {
-    assert(repl instanceof REPLServer);
+    assert.ok(repl instanceof REPLServer);
+    console.log('PASS');
   } catch (err) {
+    console.error('FAIl');
     console.error(err);
   }
 };
