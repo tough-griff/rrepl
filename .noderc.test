@@ -6,9 +6,7 @@ const { REPLServer } = require('repl');
 module.exports = repl => {
   try {
     assert(repl instanceof REPLServer);
-    console.log('PASS');
   } catch (err) {
-    console.error('FAIL');
     console.error(err);
   }
 };

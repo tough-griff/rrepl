@@ -56,9 +56,6 @@ it('returns an exit code of 0', async () => {
   expect(result.stdoutMonitor).toHaveBeenCalledWith(
     expect.stringMatching(WELCOME_MSG),
   );
-  expect(result.stdoutMonitor).toHaveBeenCalledWith(
-    expect.stringContaining('PASS'),
-  );
   expect(result.stderrMonitor).not.toHaveBeenCalled();
 });
 
