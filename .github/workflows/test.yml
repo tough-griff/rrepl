@@ -26,7 +26,7 @@ jobs:
     - name: Install and test
       run: |
         npm ci
-        npm test
+        npm run test:coverage
       env:
         CI: true
     - name: Upload coverage artifacts
