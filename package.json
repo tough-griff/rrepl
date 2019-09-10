@@ -22,7 +22,8 @@
   },
   "scripts": {
     "start": "node index",
-    "test": "node index -c .noderc.test"
+    "test": "jest",
+    "test:coverage": "nyc --reporter lcov --reporter text npm test"
   },
   "dependencies": {
     "chalk": "^2.4.2",
@@ -30,16 +31,23 @@
     "semver": "^6.3.0"
   },
   "devDependencies": {
-    "eslint": "^6.2.1",
+    "eslint": "^6.3.0",
     "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
-    "husky": "^3.0.4",
-    "lint-staged": "^9.2.3",
-    "lodash": "^4.17.15"
+    "eslint-plugin-prettier": "^3.1.0",
+    "husky": "^3.0.5",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.2.5",
+    "lodash": "^4.17.15",
+    "nyc": "^14.1.1",
+    "prettier": "^1.18.2",
+    "tmp-promise": "^2.0.2"
   },
   "eslintConfig": {
     "extends": [
-      "airbnb-base"
+      "airbnb-base",
+      "plugin:prettier/recommended"
     ],
     "rules": {
       "no-console": "off",
@@ -61,5 +69,9 @@
       "eslint --no-ignore --fix",
       "git add"
     ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
   }
 }

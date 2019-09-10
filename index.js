@@ -24,7 +24,10 @@ const { NODE_REPL_HISTORY, NODE_REPL_MODE } = process.env;
 const { REPL_MODE_SLOPPY, REPL_MODE_STRICT } = repl;
 
 commander.version(VERSION);
-commander.option('-c, --config <file>', 'configuration file to use, defaults to ~/.noderc');
+commander.option(
+  '-c, --config <file>',
+  'configuration file to use, defaults to ~/.noderc',
+);
 commander.parse(process.argv);
 
 console.log(`Welcome to ${RREPL_STRING} v${VERSION} (Node.js ${NODE_VERSION})`);
@@ -36,6 +39,7 @@ const replServer = repl.start({
 
 const home = os.homedir();
 
+/* istanbul ignore next */
 if (semver.gt(NODE_VERSION, '11.10.0') && NODE_REPL_HISTORY !== '') {
   replServer.setupHistory(
     NODE_REPL_HISTORY || path.join(home, '.node_repl_history'),
@@ -45,7 +49,10 @@ if (semver.gt(NODE_VERSION, '11.10.0') && NODE_REPL_HISTORY !== '') {
   );
 }
 
-const nodercPath = commander.config ? path.resolve(commander.config) : path.join(home, '.noderc');
+const nodercPath = commander.config
+  ? path.resolve(commander.config)
+  : path.join(home, '.noderc');
+
 if (fs.existsSync(nodercPath)) {
   try {
     /* eslint-disable-next-line global-require, import/no-dynamic-require */
@@ -53,10 +60,17 @@ if (fs.existsSync(nodercPath)) {
     if (typeof noderc === 'function') noderc(replServer);
   } catch (err) {
     console.log();
-    console.error('An error occurred while loading your configuration file (%s):', nodercPath);
+    console.error(
+      'An error occurred while loading your configuration file (%s):',
+      nodercPath,
+    );
     console.error(err);
     process.exit(1);
   }
 }
 
 replServer.prompt();
+
+replServer.on('exit', () => {
+  process.exit(0);
+});

@@ -1,16 +1,14 @@
 #!/usr/bin/env node
+
 const { strict: assert } = require('assert');
 const { REPLServer } = require('repl');
 
-module.exports = (repl) => {
+module.exports = repl => {
   try {
     assert(repl instanceof REPLServer);
     console.log('PASS');
   } catch (err) {
     console.error('FAIL');
     console.error(err);
-    process.exit(1);
   }
-
-  process.exit();
 };

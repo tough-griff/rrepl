@@ -29,3 +29,8 @@ jobs:
         npm test
       env:
         CI: true
+    - name: Upload coverage artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: coverage
+        path: coverage/
