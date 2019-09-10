@@ -1,5 +1,6 @@
 /* eslint-env jest */
 const { spawn } = require('child_process');
+const os = require('os');
 const path = require('path');
 const semver = require('semver');
 const tmp = require('tmp-promise');
@@ -106,7 +107,7 @@ it('returns an exit code of 1 when the .noderc file throws an error', async () =
   );
 });
 
-if (semver.gt(process.version, '11.10.0')) {
+if (os.platform() !== 'win32' && semver.gt(process.version, '11.10.0')) {
   it('warns with an error when setting up history fails', async () => {
     const history = await tmp.file({
       mode: '0200',
