@@ -26,6 +26,7 @@ jobs:
     - name: Install and test
       shell: bash
       run: |
+        npm install npm@latest
         npm ci
         npm run test:coverage
       env:
