@@ -21,6 +21,7 @@
     "node": ">= 8.0.0"
   },
   "scripts": {
+    "lint": "eslint --no-ignore *.js .noderc*",
     "start": "node index",
     "test": "jest",
     "test:coverage": "nyc --reporter lcov --reporter text npm test"
@@ -31,14 +32,14 @@
     "semver": "^6.3.0"
   },
   "devDependencies": {
-    "eslint": "^6.3.0",
+    "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-prettier": "^3.1.1",
     "husky": "^3.0.5",
     "jest": "^24.9.0",
-    "lint-staged": "^9.2.5",
+    "lint-staged": "^9.3.0",
     "lodash": "^4.17.15",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
@@ -65,7 +66,7 @@
     }
   },
   "lint-staged": {
-    "*.js|.noderc.*": [
+    "*.js|.noderc*": [
       "eslint --no-ignore --fix",
       "git add"
     ]
