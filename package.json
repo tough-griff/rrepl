@@ -24,7 +24,8 @@
     "lint": "eslint --no-ignore *.js .noderc*",
     "start": "node index",
     "test": "jest",
-    "test:coverage": "nyc --reporter lcov --reporter text npm test"
+    "test:cov": "nyc --reporter lcov --reporter text npm test",
+    "test:cov:upload": "codecov"
   },
   "dependencies": {
     "chalk": "^2.4.2",
@@ -32,6 +33,7 @@
     "semver": "^6.3.0"
   },
   "devDependencies": {
+    "codecov": "^3.6.1",
     "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.3.0",

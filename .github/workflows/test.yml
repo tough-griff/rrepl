@@ -19,20 +19,23 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Set up Node
+    - name: Set up Node v${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Install and test
+    - name: Install dependencies
       shell: bash
+      env:
+        CI: true
       run: |
         npm install --global npm@6.11.x
         npm ci
-        npm run test:coverage
+    - name: Run tests
+      shell: bash
+      run: npm run test:cov
+    - name: Upload coverage to CodeCov
+      if: matrix.node-version == '12.x'
+      shell: bash
       env:
-        CI: true
-    - name: Upload coverage artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: coverage
-        path: coverage/
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: npm run test:cov:upload

@@ -6,17 +6,17 @@ const _ = require('lodash'); // eslint-disable-line import/no-extraneous-depende
 const defaultValCb = i => i + 1;
 const defaultKeyCb = c => String.fromCharCode(96 + (c + 1));
 
-function initializeContext(ctx) {
+const init = function initializeContext(ctx) {
   Object.defineProperty(ctx, '_', {
     value: _.runInContext(ctx),
   });
-}
+};
 
 module.exports = repl => {
   repl.setPrompt(`${process.version} ${chalk.green('❯')} `);
 
-  initializeContext(repl.context);
-  repl.on('reset', initializeContext);
+  init(repl.context);
+  repl.on('reset', init);
 
   Object.defineProperty(Array, 'toy', {
     /**
