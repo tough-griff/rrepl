@@ -39,7 +39,6 @@ const replServer = repl.start({
 
 const home = os.homedir();
 
-/* istanbul ignore next */
 if (semver.gt(NODE_VERSION, '11.10.0') && NODE_REPL_HISTORY !== '') {
   replServer.setupHistory(
     NODE_REPL_HISTORY || path.join(home, '.node_repl_history'),
