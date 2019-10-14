@@ -47,7 +47,9 @@ const rrepl = ({ argv = [], env = {} } = {}) => {
       stderrMonitor(string);
     });
 
-    child.stdin.write('.exit\n');
+    return new Promise(res => setTimeout(res, 500)).then(() => {
+      child.stdin.write('.exit\n');
+    });
   });
 };
 

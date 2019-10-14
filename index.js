@@ -42,9 +42,7 @@ const home = os.homedir();
 if (semver.gt(NODE_VERSION, '11.10.0') && NODE_REPL_HISTORY !== '') {
   replServer.setupHistory(
     NODE_REPL_HISTORY || path.join(home, '.node_repl_history'),
-    (err, _server) => {
-      if (err) throw err;
-    },
+    (_err, _server) => {}, // swallow history errors
   );
 }
 
