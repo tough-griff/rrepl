@@ -15,6 +15,7 @@ const rrepl = ({ argv = [], env = {} } = {}) => {
   const stderrMonitor = jest.fn();
   let stdout = '';
   let stderr = '';
+  const errs = [];
 
   return new Promise((resolve, reject) => {
     const child = spawn('node', [path.resolve('index.js'), ...argv], {
@@ -26,6 +27,7 @@ const rrepl = ({ argv = [], env = {} } = {}) => {
     child.once('exit', (code, signal) => {
       resolve({
         code,
+        errs,
         signal,
         stdout,
         stdoutMonitor,
@@ -47,9 +49,13 @@ const rrepl = ({ argv = [], env = {} } = {}) => {
       stderrMonitor(string);
     });
 
-    return new Promise(res => setTimeout(res, 500)).then(() => {
-      if (child.stdin.writable) child.stdin.write('.exit\n');
-    });
+    setTimeout(() => {
+      try {
+        child.stdin.write('.exit\n');
+      } catch (err) {
+        errs.push(err);
+      }
+    }, 500);
   });
 };
 
