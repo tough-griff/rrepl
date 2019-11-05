@@ -28,7 +28,7 @@ jobs:
       env:
         CI: true
       run: |
-        npm install --global npm@6.11.x
+        npm install --global npm@6
         npm ci
     - name: Run tests
       shell: bash
