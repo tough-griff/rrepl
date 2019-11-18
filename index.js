@@ -12,13 +12,12 @@ const { version: VERSION } = require('./package.json');
 
 const { version: NODE_VERSION } = process;
 
-const RREPL_STRING = [
-  chalk.red('r'),
-  chalk.yellow('r'),
-  chalk.green('e'),
-  chalk.blue('p'),
-  chalk.magenta('l'),
-].join('');
+const RREPL_STRING =
+  chalk.red('r') +
+  chalk.yellow('r') +
+  chalk.green('e') +
+  chalk.blue('p') +
+  chalk.magenta('l');
 
 const { NODE_REPL_HISTORY, NODE_REPL_MODE } = process.env;
 const { REPL_MODE_SLOPPY, REPL_MODE_STRICT } = repl;
