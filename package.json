@@ -60,7 +60,17 @@
           "argsIgnorePattern": "^_"
         }
       ]
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.spec.js"
+        ],
+        "env": {
+          "jest": "true"
+        }
+      }
+    ]
   },
   "husky": {
     "hooks": {

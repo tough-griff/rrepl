@@ -1,4 +1,3 @@
-/* eslint-env jest */
 const { spawn } = require('child_process');
 const os = require('os');
 const path = require('path');
@@ -10,14 +9,34 @@ const ERR_MSG = 'An error occurred while loading your configuration file';
 
 tmp.setGracefulCleanup();
 
-const rrepl = ({ argv = [], env = {} } = {}) => {
-  const stdoutMonitor = jest.fn();
-  const stderrMonitor = jest.fn();
-  let stdout = '';
-  let stderr = '';
-  const errs = [];
+/**
+ * @typedef {Object} Result
+ * @property {number} code return code of the `rrepl` process
+ * @property {any[]} errs array of any errors that occur during execution
+ * @property {string} signal exit signal received by the `rrepl` process
+ * @property {string} stdout string concatenated with all output to stdout
+ * @property {jest.fn} stdoutMonitor jest mock called with any output to stdout
+ * @property {string} stderr string concatenated with all output to stderr
+ * @property {jest.fn} stderrMonitor jest mock called with any output to stderr
+ */
 
-  return new Promise((resolve, reject) => {
+/**
+ *
+ * @param {Object} opts
+ * @param {string[]} opts.argv arguments to provide to the `rrepl` script
+ * @param {Object<string,string>} opts.env environment variables to set
+ * @returns {Promise<Result>}
+ */
+const rrepl = ({ argv = [], env = {} } = {}) => {
+  const result = {
+    errs: [],
+    stdout: '',
+    stdoutMonitor: jest.fn(),
+    stderr: '',
+    stderrMonitor: jest.fn(),
+  };
+
+  return new Promise(resolve => {
     const child = spawn('node', [path.resolve('index.js'), ...argv], {
       cwd: path.resolve('.'),
       env: { ...process.env, ...env },
@@ -25,35 +44,31 @@ const rrepl = ({ argv = [], env = {} } = {}) => {
     });
 
     child.once('exit', (code, signal) => {
-      resolve({
-        code,
-        errs,
-        signal,
-        stdout,
-        stdoutMonitor,
-        stderr,
-        stderrMonitor,
-      });
+      result.code = code;
+      result.signal = signal;
+
+      resolve(result);
     });
-    child.once('error', error => {
-      reject(error);
+    child.once('error', err => {
+      result.errs.push(err);
+      resolve(result);
     });
     child.stdout.on('data', data => {
       const string = data.toString();
-      stdout = stdout.concat(string);
-      stdoutMonitor(string);
+      result.stdout = result.stdout.concat(string);
+      result.stdoutMonitor(string);
     });
     child.stderr.on('data', data => {
       const string = data.toString();
-      stderr = stderr.concat(string);
-      stderrMonitor(string);
+      result.stderr = result.stderr.concat(string);
+      result.stderrMonitor(string);
     });
 
     setTimeout(() => {
       try {
         child.stdin.write('.exit\n');
       } catch (err) {
-        errs.push(err);
+        result.errs.push(err);
       }
     }, 500);
   });
