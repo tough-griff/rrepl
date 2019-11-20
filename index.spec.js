@@ -39,7 +39,7 @@ const rrepl = ({ argv = [], env = {} } = {}) => {
   return new Promise(resolve => {
     const child = spawn('node', [path.resolve('index.js'), ...argv], {
       cwd: path.resolve('.'),
-      env: { ...process.env, ...env },
+      env: { ...process.env, ...env }, // eslint-disable-line node/no-unsupported-features/es-syntax
       timeout: 2500,
     });
 

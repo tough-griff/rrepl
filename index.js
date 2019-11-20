@@ -51,8 +51,7 @@ const nodercPath = commander.config
 
 if (fs.existsSync(nodercPath)) {
   try {
-    /* eslint-disable-next-line global-require, import/no-dynamic-require */
-    const noderc = require(nodercPath);
+    const noderc = require(nodercPath); // eslint-disable-line global-require, import/no-dynamic-require
     if (typeof noderc === 'function') noderc(replServer);
   } catch (err) {
     console.log();

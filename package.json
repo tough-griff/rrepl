@@ -33,11 +33,13 @@
     "semver": "^6.3.0"
   },
   "devDependencies": {
+    "@tough-griff/eslint-config": "^1.0.1",
     "codecov": "^3.6.1",
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-config-prettier": "^6.6.0",
+    "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-prettier": "^3.1.1",
     "husky": "^3.1.0",
     "jest": "^24.9.0",
@@ -48,29 +50,12 @@
     "tmp-promise": "^2.0.2"
   },
   "eslintConfig": {
-    "extends": [
-      "airbnb-base",
-      "plugin:prettier/recommended"
-    ],
+    "extends": "@tough-griff",
     "rules": {
       "no-console": "off",
-      "no-unused-vars": [
-        "error",
-        {
-          "argsIgnorePattern": "^_"
-        }
-      ]
-    },
-    "overrides": [
-      {
-        "files": [
-          "*.spec.js"
-        ],
-        "env": {
-          "jest": "true"
-        }
-      }
-    ]
+      "no-process-exit": "off",
+      "node/shebang": "off"
+    }
   },
   "husky": {
     "hooks": {
