@@ -36,7 +36,7 @@ const rrepl = ({ argv = [], env = {} } = {}) => {
     stderrMonitor: jest.fn(),
   };
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const child = spawn('node', [path.resolve('index.js'), ...argv], {
       cwd: path.resolve('.'),
       env: { ...process.env, ...env }, // eslint-disable-line node/no-unsupported-features/es-syntax
@@ -49,16 +49,16 @@ const rrepl = ({ argv = [], env = {} } = {}) => {
 
       resolve(result);
     });
-    child.once('error', err => {
+    child.once('error', (err) => {
       result.errs.push(err);
       resolve(result);
     });
-    child.stdout.on('data', data => {
+    child.stdout.on('data', (data) => {
       const string = data.toString();
       result.stdout = result.stdout.concat(string);
       result.stdoutMonitor(string);
     });
-    child.stderr.on('data', data => {
+    child.stderr.on('data', (data) => {
       const string = data.toString();
       result.stderr = result.stderr.concat(string);
       result.stderrMonitor(string);
