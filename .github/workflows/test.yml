@@ -8,33 +8,35 @@ on:
     branches:
       - master
 
+env:
+  CI: true
+  NPM_VERSION: 6.x
+
 jobs:
   test:
     name: Node v${{ matrix.node-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [macOS-latest, ubuntu-latest, windows-latest]
         node-version: [10.x, 12.x]
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Set up Node v${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install dependencies
-      shell: bash
-      env:
-        CI: true
-      run: |
-        npm install --global npm@6
-        npm ci
-    - name: Run tests
-      shell: bash
-      run: npm run test:cov
-    - name: Upload coverage to CodeCov
-      shell: bash
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      run: npm run test:cov:upload -- -B ${{ matrix.os }}@${{ matrix.node-version }}
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Set up Node v${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        shell: bash
+        run: |
+          npm install --global npm@$NPM_VERSION
+          npm ci
+      - name: Run tests
+        shell: bash
+        run: npm run test:cov
+      - name: Upload coverage to CodeCov
+        shell: bash
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: npm run test:cov:upload -- -B ${{ matrix.os }}@${{ matrix.node-version }}
