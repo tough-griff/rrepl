@@ -24,8 +24,7 @@
     "lint": "eslint --no-ignore *.js .noderc*",
     "start": "node index",
     "test": "jest",
-    "test:cov": "nyc --reporter lcov --reporter text npm test",
-    "test:cov:upload": "codecov"
+    "test:cov": "nyc --reporter lcov --reporter text npm test"
   },
   "dependencies": {
     "chalk": "^4.0.0",

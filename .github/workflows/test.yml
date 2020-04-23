@@ -22,7 +22,7 @@ jobs:
         node-version: [10.x, 12.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Set up Node v${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -39,4 +39,4 @@ jobs:
         shell: bash
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: npm run test:cov:upload -- -B ${{ matrix.os }}@${{ matrix.node-version }}
+        run: npx codecov -B ${{ matrix.os }}@${{ matrix.node-version }}
