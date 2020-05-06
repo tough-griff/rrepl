@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const commander = require('commander');
+const { program } = require('commander');
 const chalk = require('chalk');
 const fs = require('fs');
 const os = require('os');
@@ -24,12 +24,12 @@ const RREPL =
   chalk.blue('p') +
   chalk.magenta('l');
 
-commander.version(VERSION);
-commander.option(
+program.version(VERSION);
+program.option(
   '-c, --config <file>',
   'configuration file to use, defaults to ~/.noderc',
 );
-commander.parse(argv);
+program.parse(argv);
 
 console.log('Welcome to %s v%s (Node.js %s)', RREPL, VERSION, NODE_VERSION);
 console.log(chalk.gray('Type ".help" for more information.'));
@@ -48,8 +48,8 @@ if (semver.gte(NODE_VERSION, '11.10.0') && NODE_REPL_HISTORY !== '') {
   );
 }
 
-const nodercPath = commander.config
-  ? path.resolve(commander.config)
+const nodercPath = program.config
+  ? path.resolve(program.config)
   : path.join(home, '.noderc');
 
 if (fs.existsSync(nodercPath)) {
@@ -57,7 +57,7 @@ if (fs.existsSync(nodercPath)) {
     const noderc = require(nodercPath); // eslint-disable-line global-require, import/no-dynamic-require
     if (typeof noderc === 'function') noderc(replServer);
   } catch (err) {
-    console.log();
+    console.error();
     console.error(
       'An error occurred while loading your configuration file (%s):',
       nodercPath,
