@@ -10,7 +10,6 @@ on:
 
 env:
   CI: true
-  NPM_VERSION: 6.x
 
 jobs:
   test:
@@ -29,9 +28,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         shell: bash
-        run: |
-          npm install --global npm@$NPM_VERSION
-          npm ci
+        run: npm ci
       - name: Run tests
         shell: bash
         run: npm run test:cov
@@ -39,4 +36,5 @@ jobs:
         shell: bash
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: npx codecov -B ${{ matrix.os }}@${{ matrix.node-version }}
+          GITHUB_BRANCH: ${{ github.head_ref || github.ref }}
+        run: npx codecov --disable=gcov --build=${{ matrix.os }}@${{ matrix.node-version }} --branch=${GITHUB_BRANCH#refs/heads/}
