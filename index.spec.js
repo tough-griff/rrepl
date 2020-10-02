@@ -154,7 +154,7 @@ it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
   },
 );
 
-if (os.platform() !== 'win32' && semver.gt(process.version, '11.10.0')) {
+if (os.platform() !== 'win32' && semver.gte(process.version, '11.10.0')) {
   it('warns with an error when setting up history fails', async () => {
     const history = await tmp.file({
       mode: '0200',
