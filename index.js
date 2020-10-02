@@ -7,12 +7,10 @@ const os = require('os');
 const path = require('path');
 const repl = require('repl');
 const semver = require('semver');
-
-const { REPL_MODE_SLOPPY, REPL_MODE_STRICT } = repl;
 const { version: VERSION } = require('./package.json');
 
+const { REPL_MODE_SLOPPY, REPL_MODE_STRICT } = repl;
 const {
-  argv,
   env: { NODE_REPL_HISTORY, NODE_REPL_MODE },
   version: NODE_VERSION,
 } = process;
@@ -24,47 +22,73 @@ const RREPL =
   chalk.blue('p') +
   chalk.magenta('l');
 
-program.version(VERSION);
-program.option(
-  '-c, --config <file>',
-  'configuration file to use, defaults to ~/.noderc',
-);
-program.parse(argv);
-
-console.log('Welcome to %s v%s (Node.js %s)', RREPL, VERSION, NODE_VERSION);
-console.log(chalk.gray('Type ".help" for more information.'));
-const replServer = repl.start({
-  replMode: NODE_REPL_MODE === 'strict' ? REPL_MODE_STRICT : REPL_MODE_SLOPPY,
-  useGlobal: true,
-});
-
 const home = os.homedir();
 
-// replServer.setupHistory() added in: v11.10.0
-if (semver.gte(NODE_VERSION, '11.10.0') && NODE_REPL_HISTORY !== '') {
+/**
+ * @returns {repl.REPLServer}
+ */
+const createReplServer = () => {
+  const replServer = repl
+    .start({
+      replMode:
+        NODE_REPL_MODE === 'strict' ? REPL_MODE_STRICT : REPL_MODE_SLOPPY,
+    })
+    .pause();
+
+  // replServer.setupHistory() added in: v11.10.0
+  if (semver.lt(NODE_VERSION, '11.10.0') || NODE_REPL_HISTORY === '')
+    return replServer;
+
   replServer.setupHistory(
     NODE_REPL_HISTORY || path.join(home, '.node_repl_history'),
     (_err, _server) => {}, // swallow history errors
   );
-}
 
-const nodercPath = program.config
-  ? path.resolve(program.config)
-  : path.join(home, '.noderc');
+  return replServer;
+};
 
-if (fs.existsSync(nodercPath)) {
+program
+  .version(VERSION)
+  .option(
+    '-c, --config <file>',
+    'configuration file to use',
+    path.join(home, '.noderc'),
+  )
+  .option('-v, --verbose', 'display verbose logging')
+  .parse(process.argv);
+
+console.log('Welcome to %s v%s (Node.js %s)', RREPL, VERSION, NODE_VERSION);
+console.log(chalk.gray('Type ".help" for more information.'));
+
+if (program.verbose)
+  console.log(chalk.gray('[DEBUG] Using configuration at %s'), program.config);
+
+/** @type {repl.REPLServer | void} */
+let replServer;
+if (fs.existsSync(program.config)) {
   try {
-    const noderc = require(nodercPath); // eslint-disable-line global-require, import/no-dynamic-require
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    const noderc = require(program.config);
+    replServer = createReplServer();
     if (typeof noderc === 'function') noderc(replServer);
   } catch (err) {
-    console.error();
+    if (replServer) {
+      replServer.close();
+      console.error();
+    }
+
     console.error(
-      'An error occurred while loading your configuration file (%s):',
-      nodercPath,
+      chalk.red('An error occurred while loading your configuration at %s'),
+      program.config,
     );
     console.error(err);
     process.exit(1);
   }
+} else {
+  if (program.verbose)
+    console.log(chalk.gray('[DEBUG] No configuration at %s'), program.config);
+
+  replServer = createReplServer();
 }
 
 replServer.prompt();

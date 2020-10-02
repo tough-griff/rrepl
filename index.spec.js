@@ -5,7 +5,7 @@ const semver = require('semver');
 const tmp = require('tmp-promise');
 
 const WELCOME_MSG = /Welcome to rrepl v(\d+\.\d+\.\d+) \(Node.js v(\d+\.\d+\.\d+)\)/;
-const ERR_MSG = 'An error occurred while loading your configuration file';
+const ERR_MSG = 'An error occurred while loading your configuration';
 
 tmp.setGracefulCleanup();
 
@@ -95,7 +95,7 @@ it('returns an exit code of 0 when defaulting to ~/.noderc', async () => {
   expect(result.stderrMonitor).not.toHaveBeenCalled();
 });
 
-it('returns an exit code of 0 when passed a bad .noderc path', async () => {
+it('returns an exit code of 0 when passed a bad config path', async () => {
   const result = await rrepl({
     argv: ['-c', path.resolve('.noderc.test.noexists')],
   });
@@ -106,7 +106,28 @@ it('returns an exit code of 0 when passed a bad .noderc path', async () => {
   expect(result.stderrMonitor).not.toHaveBeenCalled();
 });
 
-it('returns an exit code of 0 when passed a .noderc with no export', async () => {
+it('returns an exit code of 0 and logs debug messages when passed a bad config path in verbose mode', async () => {
+  const result = await rrepl({
+    argv: ['-c', path.resolve('.noderc.test.noexists'), '-v'],
+  });
+  expect(result).toHaveProperty('code', 0);
+  expect(result.stdoutMonitor).toHaveBeenCalledWith(
+    expect.stringMatching(WELCOME_MSG),
+  );
+  expect(result.stdoutMonitor).toHaveBeenCalledWith(
+    expect.stringMatching(
+      /\[DEBUG\] Using configuration at .*\.noderc\.test\.noexists/,
+    ),
+  );
+  expect(result.stdoutMonitor).toHaveBeenCalledWith(
+    expect.stringMatching(
+      /\[DEBUG\] No configuration at .*\.noderc\.test\.noexists/,
+    ),
+  );
+  expect(result.stderrMonitor).not.toHaveBeenCalled();
+});
+
+it('returns an exit code of 0 when passed a config file with no export', async () => {
   const result = await rrepl({
     argv: ['-c', path.resolve('.noderc.test.nofunc')],
   });
@@ -117,18 +138,21 @@ it('returns an exit code of 0 when passed a .noderc with no export', async () =>
   expect(result.stderrMonitor).not.toHaveBeenCalled();
 });
 
-it('returns an exit code of 1 when the .noderc file throws an error', async () => {
-  const result = await rrepl({
-    argv: ['-c', path.resolve('.noderc.test.throws')],
-  });
-  expect(result).toHaveProperty('code', 1);
-  expect(result.stdoutMonitor).toHaveBeenCalledWith(
-    expect.stringMatching(WELCOME_MSG),
-  );
-  expect(result.stderrMonitor).toHaveBeenCalledWith(
-    expect.stringContaining(ERR_MSG),
-  );
-});
+it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
+  'returns an exit code of 1 when the config file throws an error (%s)',
+  async (filename) => {
+    const result = await rrepl({
+      argv: ['-c', path.resolve(filename)],
+    });
+    expect(result).toHaveProperty('code', 1);
+    expect(result.stdoutMonitor).toHaveBeenCalledWith(
+      expect.stringMatching(WELCOME_MSG),
+    );
+    expect(result.stderrMonitor).toHaveBeenCalledWith(
+      expect.stringContaining(ERR_MSG),
+    );
+  },
+);
 
 if (os.platform() !== 'win32' && semver.gt(process.version, '11.10.0')) {
   it('warns with an error when setting up history fails', async () => {
