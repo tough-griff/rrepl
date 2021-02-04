@@ -1,4 +1,4 @@
-# rrepl [![npm](https://img.shields.io/npm/v/rrepl.svg)](https://www.npmjs.com/package/rrepl) [![Actions Status](https://github.com/tough-griff/rrepl/workflows/Test/badge.svg)](https://github.com/tough-griff/rrepl/actions) [![codecov](https://codecov.io/gh/tough-griff/rrepl/branch/master/graph/badge.svg)](https://codecov.io/gh/tough-griff/rrepl)
+# rrepl [![npm](https://img.shields.io/npm/v/rrepl.svg)](https://www.npmjs.com/package/rrepl) [![Actions Status](https://github.com/tough-griff/rrepl/workflows/Test/badge.svg)](https://github.com/tough-griff/rrepl/actions) [![codecov](https://codecov.io/gh/tough-griff/rrepl/branch/main/graph/badge.svg)](https://codecov.io/gh/tough-griff/rrepl)
 
 > An improved node REPL with support for configuration.
 
@@ -30,7 +30,7 @@ module.exports = (repl) => {
 };
 ```
 
-See [_.noderc.example_](https://github.com/tough-griff/rrepl/blob/master/.noderc.example)
+See [_.noderc.example_](https://github.com/tough-griff/rrepl/blob/main/.noderc.example)
 as a sample of what you can do with `rrepl`!
 
 ### NODE_OPTIONS
