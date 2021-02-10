@@ -60,15 +60,17 @@ program
 console.log('Welcome to %s v%s (Node.js %s)', RREPL, VERSION, NODE_VERSION);
 console.log(chalk.gray('Type ".help" for more information.'));
 
-if (program.verbose)
-  console.log(chalk.gray('[DEBUG] Using configuration at %s'), program.config);
+const { config, verbose } = program.opts();
+
+if (verbose)
+  console.log(chalk.gray('[DEBUG] Using configuration at %s'), config);
 
 /** @type {repl.REPLServer | void} */
 let replServer;
-if (fs.existsSync(program.config)) {
+if (fs.existsSync(config)) {
   try {
     // eslint-disable-next-line global-require, import/no-dynamic-require
-    const noderc = require(program.config);
+    const noderc = require(config);
     replServer = createReplServer();
     if (typeof noderc === 'function') noderc(replServer);
   } catch (err) {
@@ -79,14 +81,14 @@ if (fs.existsSync(program.config)) {
 
     console.error(
       chalk.red('An error occurred while loading your configuration at %s'),
-      program.config,
+      config,
     );
     console.error(err);
     process.exit(1);
   }
 } else {
-  if (program.verbose)
-    console.log(chalk.gray('[DEBUG] No configuration at %s'), program.config);
+  if (verbose)
+    console.log(chalk.gray('[DEBUG] No configuration at %s'), config);
 
   replServer = createReplServer();
 }
