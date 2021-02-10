@@ -24,7 +24,8 @@
     "lint": "eslint --no-ignore *.js .noderc*",
     "start": "node index",
     "test": "jest",
-    "test:cov": "nyc --reporter lcov --reporter text npm test"
+    "test:cov": "nyc --reporter lcov --reporter text npm test",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "chalk": "^4.1.0",
@@ -40,7 +41,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^4.3.0",
+    "husky": "^5.0.9",
     "jest": "^26.4.2",
     "lint-staged": "^10.4.0",
     "lodash": "^4.17.20",
@@ -54,11 +55,6 @@
       "no-console": "off",
       "no-process-exit": "off",
       "node/shebang": "off"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
