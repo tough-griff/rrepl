@@ -1,6 +1,6 @@
 {
   "name": "rrepl",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "An improved node REPL with support for configuration.",
   "keywords": [
     "cli",
