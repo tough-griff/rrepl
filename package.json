@@ -34,8 +34,8 @@
   },
   "dependencies": {
     "chalk": "^4.1.0",
-    "commander": "^7.1.0",
-    "semver": "^7.3.4"
+    "commander": "^7.2.0",
+    "semver": "^7.3.5"
   },
   "devDependencies": {
     "@tough-griff/eslint-config": "^1.1.8",
