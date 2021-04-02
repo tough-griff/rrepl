@@ -13,10 +13,13 @@
     "url": "git+https://github.com/tough-griff/rrepl.git"
   },
   "main": "index.js",
+  "types": "index.d.ts",
   "bin": {
-    "rrepl": "index.js"
+    "rrepl": "cli.js"
   },
   "files": [
+    "cli.js",
+    "index.d.ts",
     "index.js"
   ],
   "engines": {
@@ -24,7 +27,7 @@
   },
   "scripts": {
     "lint": "eslint --no-ignore *.js .noderc*",
-    "start": "node index",
+    "start": "node cli",
     "test": "jest",
     "test:cov": "nyc --reporter lcov --reporter text npm test",
     "prepare": "husky install"
@@ -36,6 +39,7 @@
   },
   "devDependencies": {
     "@tough-griff/eslint-config": "^1.1.8",
+    "@types/jest": "^26.0.22",
     "codecov": "^3.8.1",
     "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",
