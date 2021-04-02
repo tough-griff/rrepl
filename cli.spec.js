@@ -95,11 +95,6 @@ it('returns an exit code of 0 and logs debug messages when passed a bad config p
   expect(result).toHaveProperty('code', 0);
   expect(result.stdoutMonitor).toHaveBeenCalledWith(
     expect.stringMatching(
-      /\[DEBUG\] Using configuration at .*\.noderc\.test\.noexists/,
-    ),
-  );
-  expect(result.stdoutMonitor).toHaveBeenCalledWith(
-    expect.stringMatching(
       /\[DEBUG\] No configuration found at .*\.noderc\.test\.noexists/,
     ),
   );
