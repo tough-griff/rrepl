@@ -118,7 +118,7 @@ it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
     expect(result).toHaveProperty('code', 1);
     expect(result.stderrMonitor).toHaveBeenCalledWith(
       expect.stringContaining(
-        'An error occurred while loading your configuration',
+        'An error occurred while loading configuration at',
       ),
     );
   },

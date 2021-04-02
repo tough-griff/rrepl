@@ -44,3 +44,13 @@ env NODE_OPTIONS="--experimental-repl-await" rrepl
 ```
 
 to enable top-level await keyword support.
+
+## Programmatic Usage
+Furthermore, you can programmatically create a repl with the following:
+```js
+import { createRepl } from 'rrepl';
+// or
+const { createRepl } = require('rrepl');
+
+const repl = await createRepl();
+```

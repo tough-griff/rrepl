@@ -4,10 +4,4 @@
 
 import { REPLServer } from 'repl';
 
-declare function rrepl(process: {
-  argv: string[];
-  env: NodeJS.ProcessEnv;
-  version: string;
-}): Promise<REPLServer>;
-
-export = rrepl;
+export function createRepl(opts: { config?: string }): Promise<REPLServer>;
