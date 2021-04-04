@@ -1,0 +1,13 @@
+{
+  "files": [
+    "package.json"
+  ],
+  "compilerOptions": {
+    "allowJs": true,
+    "composite": true,
+    "declaration": true,
+    "outDir": "./",
+    "resolveJsonModule": true,
+    "rootDir": "./"
+  }
+}

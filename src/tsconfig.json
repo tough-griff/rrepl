@@ -1,0 +1,19 @@
+{
+  "references": [
+    {
+      "path": "../"
+    }
+  ],
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "../lib",
+    "importHelpers": true,
+    "incremental": true,
+    "lib": ["es2018"],
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "rootDir": "./",
+    "strict": true,
+    "target": "es2018"
+  }
+}

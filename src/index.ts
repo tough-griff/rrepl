@@ -1,13 +1,13 @@
-const console = require('console');
-const chalk = require('chalk');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const process = require('process');
-const readline = require('readline');
-const repl = require('repl');
-const semver = require('semver');
-const { version } = require('./package.json');
+import * as console from 'console';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
+import * as process from 'process';
+import * as readline from 'readline';
+import * as repl from 'repl';
+import * as semver from 'semver';
+import * as chalk from 'chalk';
+import { version } from '../package.json';
 
 const RREPL_STR =
   chalk.red('r') +
@@ -16,24 +16,17 @@ const RREPL_STR =
   chalk.blue('p') +
   chalk.magenta('l');
 
-/**
- * @param {any} message
- * @param {any[]} args
- */
-const debug = (message, ...args) => {
+const debug = (message: any, ...args: any[]) => {
   if (process.env.RREPL_VERBOSE) console.log(message, ...args);
 };
 
-/**
- * @returns {Promise<repl.REPLServer>}
- */
-const startReplServer = () => {
-  const replMode =
-    process.env.NODE_REPL_MODE === 'strict'
-      ? repl.REPL_MODE_STRICT
-      : repl.REPL_MODE_SLOPPY;
-
+const startReplServer = (): Promise<repl.REPLServer> => {
   return new Promise((resolve) => {
+    const replMode =
+      process.env.NODE_REPL_MODE === 'strict'
+        ? repl.REPL_MODE_STRICT
+        : repl.REPL_MODE_SLOPPY;
+
     const replServer = repl.start({ replMode }).pause();
 
     // move the existing cursor to position 0 so we overwrite the default prompt
@@ -59,14 +52,9 @@ const startReplServer = () => {
   });
 };
 
-/**
- * @param {Object} opts
- * @param {string} opts.config
- * @returns {Promise<repl.REPLServer>}
- */
-module.exports.createRepl = async function createRepl({
+export async function createRepl({
   config = path.join(os.homedir(), '.noderc'),
-}) {
+}): Promise<repl.REPLServer> {
   console.log(
     'Welcome to %s@%s (Node.js %s)',
     RREPL_STR,
@@ -77,20 +65,20 @@ module.exports.createRepl = async function createRepl({
 
   const replServer = await startReplServer();
 
-  if (fs.existsSync(config)) {
-    try {
-      // eslint-disable-next-line global-require, import/no-dynamic-require
-      const noderc = require(config);
-      if (typeof noderc === 'function') {
-        debug(chalk.gray('[DEBUG] Using configuration at %s'), config);
-        noderc(replServer);
-      } else {
-        debug(
-          chalk.gray('[DEBUG] Configuration at %s did not export a function'),
-          config,
-        );
-      }
-    } catch (err) {
+  try {
+    await fs.promises.access(config, fs.constants.R_OK);
+    const noderc = await import(config);
+    if (typeof noderc === 'function') {
+      debug(chalk.gray('[DEBUG] Using configuration at %s'), config);
+      noderc(replServer);
+    } else {
+      debug(
+        chalk.gray('[DEBUG] Configuration at %s did not export a function'),
+        config,
+      );
+    }
+  } catch (err) {
+    if (err.syscall !== 'access' || err.code !== 'ENOENT') {
       replServer.close();
 
       console.error(
@@ -102,11 +90,11 @@ module.exports.createRepl = async function createRepl({
 
       throw err;
     }
-  } else {
+
     debug(chalk.gray('[DEBUG] No configuration found at %s'), config);
   }
 
   replServer.prompt();
 
   return replServer;
-};
+}
