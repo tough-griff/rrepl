@@ -14,8 +14,6 @@ interface Result {
   stdoutMonitor: jest.Mock;
 }
 
-tmp.setGracefulCleanup();
-
 const fork = (
   argv: ReadonlyArray<string> = [],
   env: NodeJS.ProcessEnv = {},
@@ -128,18 +126,18 @@ it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
 
 if (os.platform() !== 'win32' && semver.gte(process.version, '11.10.0')) {
   it('warns with an error when setting up history fails', async () => {
-    const history = await tmp.file({
+    const tmpFile = await tmp.file({
       mode: 0o0200,
       prefix: '.node_repl_history_',
     });
     const result = await fork(['-c', '.noderc.test'], {
-      NODE_REPL_HISTORY: history.path,
+      NODE_REPL_HISTORY: tmpFile.path,
     });
     expect(result.errs).toHaveLength(0);
     expect(result.stdoutMonitor).toHaveBeenCalledWith(
       expect.stringMatching(/REPL session history will not be persisted/),
     );
 
-    history.cleanup();
+    return tmpFile.cleanup();
   });
 }

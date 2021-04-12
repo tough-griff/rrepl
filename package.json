@@ -26,9 +26,10 @@
     "node": ">= 10.0.0"
   },
   "scripts": {
-    "prebuild": "rimraf lib/",
     "build": "tsc --build src",
+    "clean": "tsc --build src --clean",
     "lint": "eslint src/",
+    "prestart": "npm run build",
     "start": "node lib/cli",
     "test": "jest src/",
     "test:cov": "nyc --reporter lcov --reporter text npm test",
@@ -37,16 +38,16 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "commander": "^7.2.0",
-    "semver": "^7.3.5",
-    "tslib": "^1.14.1"
+    "semver": "^7.3.5"
   },
   "devDependencies": {
     "@tough-griff/eslint-config-typescript": "^1.1.9",
+    "@tsconfig/node10": "^1.0.7",
     "@types/jest": "^26.0.22",
     "@types/semver": "^7.3.4",
     "@types/tmp": "^0.2.0",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
-    "@typescript-eslint/parser": "^4.20.0",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
     "codecov": "^3.8.1",
     "eslint": "^7.23.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -59,7 +60,6 @@
     "lodash": "^4.17.21",
     "nyc": "^15.1.0",
     "prettier": "^2.2.1",
-    "rimraf": "^3.0.2",
     "tmp-promise": "^3.0.2",
     "ts-jest": "^26.5.4",
     "ts-node": "^9.1.1",

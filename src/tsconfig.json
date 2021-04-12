@@ -1,19 +1,16 @@
 {
+  "extends": "@tsconfig/node10/tsconfig.json",
   "references": [
     {
-      "path": "../"
+      "path": ".."
     }
   ],
   "compilerOptions": {
+    "composite": true,
     "declaration": true,
+    "esModuleInterop": false,
     "outDir": "../lib",
-    "importHelpers": true,
-    "incremental": true,
-    "lib": ["es2018"],
-    "module": "commonjs",
     "resolveJsonModule": true,
-    "rootDir": "./",
-    "strict": true,
-    "target": "es2018"
+    "sourceMap": true
   }
 }
