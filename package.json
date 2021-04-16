@@ -26,14 +26,16 @@
     "node": ">= 10.0.0"
   },
   "scripts": {
-    "build": "tsc --build src",
-    "clean": "tsc --build src --clean",
+    "build": "tsc --build src/",
+    "postbuild": "node -e \"require('fs').chmodSync('./lib/cli.js', 0o755)\"",
+    "clean": "tsc --build src/ --clean",
     "lint": "eslint src/",
+    "prepack": "npm run clean && npm run build",
+    "prepare": "husky install",
     "prestart": "npm run build",
     "start": "node lib/cli",
     "test": "jest src/",
-    "test:cov": "nyc --reporter lcov --reporter text npm test",
-    "prepare": "husky install"
+    "test:cov": "nyc --reporter lcov --reporter text npm test"
   },
   "dependencies": {
     "chalk": "^4.1.0",
