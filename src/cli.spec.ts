@@ -71,7 +71,7 @@ const fork = (
   });
 };
 
-it.concurrent(
+it(
   'returns an exit code of 0',
   async () => {
     const result = await fork(['-c', '.noderc.test']);
@@ -83,7 +83,7 @@ it.concurrent(
   TIMEOUT,
 );
 
-it.concurrent(
+it(
   'returns an exit code of 0 when defaulting to ~/.noderc',
   async () => {
     const result = await fork([], { NODE_REPL_MODE: 'strict' });
@@ -95,7 +95,7 @@ it.concurrent(
   TIMEOUT,
 );
 
-it.concurrent(
+it(
   'returns an exit code of 0 when passed a bad config path',
   async () => {
     const result = await fork(['-c', '.noderc.test.noexists']);
@@ -107,7 +107,7 @@ it.concurrent(
   TIMEOUT,
 );
 
-it.concurrent(
+it(
   'returns an exit code of 0 and logs debug messages when passed a bad config path in verbose mode',
   async () => {
     const result = await fork(['-c', '.noderc.test.noexists', '-v']);
@@ -124,7 +124,7 @@ it.concurrent(
   TIMEOUT,
 );
 
-it.concurrent(
+it(
   'returns an exit code of 0 when passed a config file with no export',
   async () => {
     const result = await fork(['-c', '.noderc.test.nofunc']);
@@ -136,7 +136,7 @@ it.concurrent(
   TIMEOUT,
 );
 
-it.concurrent.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
+it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
   'returns an exit code of 1 when the config file throws an error (%s)',
   async (filename) => {
     const result = await fork(['-c', filename]);
@@ -154,7 +154,7 @@ it.concurrent.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
 );
 
 if (os.platform() !== 'win32' && semver.gte(process.version, '11.10.0')) {
-  it.concurrent(
+  it(
     'warns with an error when setting up history fails',
     async () => {
       const tmpFile = await tmp.file({
