@@ -37,9 +37,12 @@ const fork = (
     const result = new Result(argv, env);
 
     const child = childProcess.fork('./src/cli', argv, {
-      env: { ...process.env, ...env },
-      execPath: './node_modules/.bin/ts-node',
-      execArgv: ['-P', './src/tsconfig.json'],
+      env: {
+        ...process.env,
+        TS_NODE_PROJECT: './src/tsconfig.json',
+        ...env,
+      },
+      execArgv: ['-r', 'ts-node/register'],
       stdio: 'pipe',
     });
 
@@ -82,7 +85,7 @@ it('returns an exit code of 0', async () => {
   expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
-}, 10_000);
+});
 
 it('returns an exit code of 0 when defaulting to ~/.noderc', async () => {
   const result = await fork([], { NODE_REPL_MODE: 'strict' });
@@ -91,7 +94,7 @@ it('returns an exit code of 0 when defaulting to ~/.noderc', async () => {
   expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
-}, 10_000);
+});
 
 it('returns an exit code of 0 when passed a bad config path', async () => {
   const result = await fork(['-c', '.noderc.test.noexists']);
@@ -100,7 +103,7 @@ it('returns an exit code of 0 when passed a bad config path', async () => {
   expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
-}, 10_000);
+});
 
 it('returns an exit code of 0 and logs debug messages when passed a bad config path in verbose mode', async () => {
   const result = await fork(['-c', '.noderc.test.noexists', '-v']);
@@ -114,7 +117,7 @@ it('returns an exit code of 0 and logs debug messages when passed a bad config p
     ),
   );
   expect(result.stderrMonitor).not.toHaveBeenCalled();
-}, 10_000);
+});
 
 it('returns an exit code of 0 when passed a config file with no export', async () => {
   const result = await fork(['-c', '.noderc.test.nofunc']);
@@ -123,7 +126,7 @@ it('returns an exit code of 0 when passed a config file with no export', async (
   expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
-}, 10_000);
+});
 
 it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
   'returns an exit code of 1 when the config file throws an error (%s)',
@@ -140,7 +143,6 @@ it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
       ),
     );
   },
-  10_000,
 );
 
 if (os.platform() !== 'win32' && semver.gte(process.version, '11.10.0')) {
@@ -161,5 +163,5 @@ if (os.platform() !== 'win32' && semver.gte(process.version, '11.10.0')) {
     );
 
     return tmpFile.cleanup();
-  }, 10_000);
+  });
 }
