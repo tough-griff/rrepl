@@ -2,7 +2,6 @@ import * as childProcess from 'child_process';
 import * as os from 'os';
 import * as semver from 'semver';
 import * as tmp from 'tmp-promise';
-import { pick } from 'lodash';
 
 class Result {
   argv: ReadonlyArray<string>;
@@ -20,14 +19,6 @@ class Result {
     this.env = env;
   }
 }
-
-const debug = (result: Result) => {
-  if (process.env.CI !== 'true') return;
-
-  console.log(
-    pick(result, 'argv', 'env', 'code', 'err', 'signal', 'stderr', 'stdout'),
-  );
-};
 
 const fork = (
   argv: ReadonlyArray<string> = [],
@@ -80,34 +71,30 @@ const fork = (
 
 it('returns an exit code of 0', async () => {
   const result = await fork(['-c', '.noderc.test']);
-  debug(result);
   expect(result.errs).toHaveLength(0);
   expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
-});
+}, 6_000);
 
 it('returns an exit code of 0 when defaulting to ~/.noderc', async () => {
   const result = await fork([], { NODE_REPL_MODE: 'strict' });
-  debug(result);
   expect(result.errs).toHaveLength(0);
   expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
-});
+}, 6_000);
 
 it('returns an exit code of 0 when passed a bad config path', async () => {
   const result = await fork(['-c', '.noderc.test.noexists']);
-  debug(result);
   expect(result.errs).toHaveLength(0);
   expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
-});
+}, 6_000);
 
 it('returns an exit code of 0 and logs debug messages when passed a bad config path in verbose mode', async () => {
   const result = await fork(['-c', '.noderc.test.noexists', '-v']);
-  debug(result);
   expect(result.errs).toHaveLength(0);
   expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
@@ -117,22 +104,20 @@ it('returns an exit code of 0 and logs debug messages when passed a bad config p
     ),
   );
   expect(result.stderrMonitor).not.toHaveBeenCalled();
-});
+}, 6_000);
 
 it('returns an exit code of 0 when passed a config file with no export', async () => {
   const result = await fork(['-c', '.noderc.test.nofunc']);
-  debug(result);
   expect(result.errs).toHaveLength(0);
   expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
-});
+}, 6_000);
 
 it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
   'returns an exit code of 1 when the config file throws an error (%s)',
   async (filename) => {
     const result = await fork(['-c', filename]);
-    debug(result);
     expect(result.errs).toHaveLength(0);
     expect(result).toHaveProperty('signal', null);
     expect(result).toHaveProperty('code', 1);
@@ -143,6 +128,7 @@ it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
       ),
     );
   },
+  6_000,
 );
 
 if (os.platform() !== 'win32' && semver.gte(process.version, '11.10.0')) {
@@ -154,7 +140,6 @@ if (os.platform() !== 'win32' && semver.gte(process.version, '11.10.0')) {
     const result = await fork(['-c', '.noderc.test'], {
       NODE_REPL_HISTORY: tmpFile.path,
     });
-    debug(result);
     expect(result).toHaveProperty('signal', null);
     expect(result.errs).toHaveLength(0);
     // expect(result).toHaveProperty('code', 0); FIXME
@@ -163,5 +148,5 @@ if (os.platform() !== 'win32' && semver.gte(process.version, '11.10.0')) {
     );
 
     return tmpFile.cleanup();
-  });
+  }, 6_000);
 }
