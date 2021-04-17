@@ -41,7 +41,7 @@ const fork = (
     });
 
     // poor man's timeout option, added in v15
-    setTimeout(() => child.kill('SIGKILL'), 2500);
+    setTimeout(() => child.kill('SIGKILL'), 4000);
 
     child.on('error', (err) => {
       result.errs.push(err);
