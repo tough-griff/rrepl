@@ -3,6 +3,8 @@ import * as os from 'os';
 import * as semver from 'semver';
 import * as tmp from 'tmp-promise';
 
+const TIMEOUT = 6_000;
+
 class Result {
   argv: ReadonlyArray<string>;
   env: NodeJS.ProcessEnv;
@@ -69,52 +71,72 @@ const fork = (
   });
 };
 
-it('returns an exit code of 0', async () => {
-  const result = await fork(['-c', '.noderc.test']);
-  expect(result.errs).toHaveLength(0);
-  expect(result).toHaveProperty('signal', null);
-  expect(result).toHaveProperty('code', 0);
-  expect(result.stderrMonitor).not.toHaveBeenCalled();
-}, 6_000);
+it.concurrent(
+  'returns an exit code of 0',
+  async () => {
+    const result = await fork(['-c', '.noderc.test']);
+    expect(result.errs).toHaveLength(0);
+    expect(result).toHaveProperty('signal', null);
+    expect(result).toHaveProperty('code', 0);
+    expect(result.stderrMonitor).not.toHaveBeenCalled();
+  },
+  TIMEOUT,
+);
 
-it('returns an exit code of 0 when defaulting to ~/.noderc', async () => {
-  const result = await fork([], { NODE_REPL_MODE: 'strict' });
-  expect(result.errs).toHaveLength(0);
-  expect(result).toHaveProperty('signal', null);
-  expect(result).toHaveProperty('code', 0);
-  expect(result.stderrMonitor).not.toHaveBeenCalled();
-}, 6_000);
+it.concurrent(
+  'returns an exit code of 0 when defaulting to ~/.noderc',
+  async () => {
+    const result = await fork([], { NODE_REPL_MODE: 'strict' });
+    expect(result.errs).toHaveLength(0);
+    expect(result).toHaveProperty('signal', null);
+    expect(result).toHaveProperty('code', 0);
+    expect(result.stderrMonitor).not.toHaveBeenCalled();
+  },
+  TIMEOUT,
+);
 
-it('returns an exit code of 0 when passed a bad config path', async () => {
-  const result = await fork(['-c', '.noderc.test.noexists']);
-  expect(result.errs).toHaveLength(0);
-  expect(result).toHaveProperty('signal', null);
-  expect(result).toHaveProperty('code', 0);
-  expect(result.stderrMonitor).not.toHaveBeenCalled();
-}, 6_000);
+it.concurrent(
+  'returns an exit code of 0 when passed a bad config path',
+  async () => {
+    const result = await fork(['-c', '.noderc.test.noexists']);
+    expect(result.errs).toHaveLength(0);
+    expect(result).toHaveProperty('signal', null);
+    expect(result).toHaveProperty('code', 0);
+    expect(result.stderrMonitor).not.toHaveBeenCalled();
+  },
+  TIMEOUT,
+);
 
-it('returns an exit code of 0 and logs debug messages when passed a bad config path in verbose mode', async () => {
-  const result = await fork(['-c', '.noderc.test.noexists', '-v']);
-  expect(result.errs).toHaveLength(0);
-  expect(result).toHaveProperty('signal', null);
-  expect(result).toHaveProperty('code', 0);
-  expect(result.stdoutMonitor).toHaveBeenCalledWith(
-    expect.stringMatching(
-      /\[DEBUG\] No configuration found at .*\.noderc\.test\.noexists/,
-    ),
-  );
-  expect(result.stderrMonitor).not.toHaveBeenCalled();
-}, 6_000);
+it.concurrent(
+  'returns an exit code of 0 and logs debug messages when passed a bad config path in verbose mode',
+  async () => {
+    const result = await fork(['-c', '.noderc.test.noexists', '-v']);
+    expect(result.errs).toHaveLength(0);
+    expect(result).toHaveProperty('signal', null);
+    expect(result).toHaveProperty('code', 0);
+    expect(result.stdoutMonitor).toHaveBeenCalledWith(
+      expect.stringMatching(
+        /\[DEBUG\] No configuration found at .*\.noderc\.test\.noexists/,
+      ),
+    );
+    expect(result.stderrMonitor).not.toHaveBeenCalled();
+  },
+  TIMEOUT,
+);
 
-it('returns an exit code of 0 when passed a config file with no export', async () => {
-  const result = await fork(['-c', '.noderc.test.nofunc']);
-  expect(result.errs).toHaveLength(0);
-  expect(result).toHaveProperty('signal', null);
-  expect(result).toHaveProperty('code', 0);
-  expect(result.stderrMonitor).not.toHaveBeenCalled();
-}, 6_000);
+it.concurrent(
+  'returns an exit code of 0 when passed a config file with no export',
+  async () => {
+    const result = await fork(['-c', '.noderc.test.nofunc']);
+    expect(result.errs).toHaveLength(0);
+    expect(result).toHaveProperty('signal', null);
+    expect(result).toHaveProperty('code', 0);
+    expect(result.stderrMonitor).not.toHaveBeenCalled();
+  },
+  TIMEOUT,
+);
 
-it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
+it.concurrent.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
   'returns an exit code of 1 when the config file throws an error (%s)',
   async (filename) => {
     const result = await fork(['-c', filename]);
@@ -128,25 +150,29 @@ it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
       ),
     );
   },
-  6_000,
+  TIMEOUT,
 );
 
 if (os.platform() !== 'win32' && semver.gte(process.version, '11.10.0')) {
-  it('warns with an error when setting up history fails', async () => {
-    const tmpFile = await tmp.file({
-      mode: 0o0200,
-      prefix: '.node_repl_history_',
-    });
-    const result = await fork(['-c', '.noderc.test'], {
-      NODE_REPL_HISTORY: tmpFile.path,
-    });
-    expect(result).toHaveProperty('signal', null);
-    expect(result.errs).toHaveLength(0);
-    // expect(result).toHaveProperty('code', 0); FIXME
-    expect(result.stdoutMonitor).toHaveBeenCalledWith(
-      expect.stringMatching(/REPL session history will not be persisted/),
-    );
+  it.concurrent(
+    'warns with an error when setting up history fails',
+    async () => {
+      const tmpFile = await tmp.file({
+        mode: 0o0200,
+        prefix: '.node_repl_history_',
+      });
+      const result = await fork(['-c', '.noderc.test'], {
+        NODE_REPL_HISTORY: tmpFile.path,
+      });
+      expect(result).toHaveProperty('signal', null);
+      expect(result.errs).toHaveLength(0);
+      // expect(result).toHaveProperty('code', 0); FIXME
+      expect(result.stdoutMonitor).toHaveBeenCalledWith(
+        expect.stringMatching(/REPL session history will not be persisted/),
+      );
 
-    return tmpFile.cleanup();
-  }, 6_000);
+      return tmpFile.cleanup();
+    },
+    TIMEOUT,
+  );
 }
