@@ -1,41 +1,47 @@
 import * as childProcess from 'child_process';
 import * as os from 'os';
-import * as path from 'path';
 import * as semver from 'semver';
 import * as tmp from 'tmp-promise';
+import { pick } from 'lodash';
 
-interface Result {
-  code: number | null;
-  errs: Error[];
-  signal: string | null;
-  stderr: string;
-  stderrMonitor: jest.Mock;
-  stdout: string;
-  stdoutMonitor: jest.Mock;
+class Result {
+  argv: ReadonlyArray<string>;
+  env: NodeJS.ProcessEnv;
+  code: number | null = null;
+  errs: Error[] = [];
+  signal: string | null = null;
+  stderr: string = '';
+  stderrMonitor: jest.Mock = jest.fn();
+  stdout: string = '';
+  stdoutMonitor: jest.Mock = jest.fn();
+
+  constructor(argv: ReadonlyArray<string>, env: NodeJS.ProcessEnv) {
+    this.argv = argv;
+    this.env = env;
+  }
 }
+
+const debug = (result: Result) =>
+  console.log(
+    pick(result, 'argv', 'env', 'code', 'err', 'signal', 'stderr', 'stdout'),
+  );
 
 const fork = (
   argv: ReadonlyArray<string> = [],
   env: NodeJS.ProcessEnv = {},
 ): Promise<Result> => {
   return new Promise((resolve) => {
-    const result: Result = {
-      code: null,
-      errs: [],
-      signal: null,
-      stdout: '',
-      stdoutMonitor: jest.fn(),
-      stderr: '',
-      stderrMonitor: jest.fn(),
-    };
+    const result = new Result(argv, env);
 
     const child = childProcess.fork('./src/cli', argv, {
-      cwd: path.resolve('.'),
       env: { ...process.env, ...env },
       execPath: './node_modules/.bin/ts-node',
       execArgv: ['-P', './src/tsconfig.json'],
       stdio: 'pipe',
     });
+
+    // poor man's timeout option, added in v15
+    setTimeout(() => child.kill('SIGKILL'), 2500);
 
     child.on('error', (err) => {
       result.errs.push(err);
@@ -64,7 +70,6 @@ const fork = (
     child.once('exit', (code, signal) => {
       result.code = code;
       result.signal = signal;
-
       resolve(result);
     });
   });
@@ -72,28 +77,36 @@ const fork = (
 
 it('returns an exit code of 0', async () => {
   const result = await fork(['-c', '.noderc.test']);
+  debug(result);
   expect(result.errs).toHaveLength(0);
+  expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
 });
 
 it('returns an exit code of 0 when defaulting to ~/.noderc', async () => {
   const result = await fork([], { NODE_REPL_MODE: 'strict' });
+  debug(result);
   expect(result.errs).toHaveLength(0);
+  expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
 });
 
 it('returns an exit code of 0 when passed a bad config path', async () => {
   const result = await fork(['-c', '.noderc.test.noexists']);
+  debug(result);
   expect(result.errs).toHaveLength(0);
+  expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
 });
 
 it('returns an exit code of 0 and logs debug messages when passed a bad config path in verbose mode', async () => {
   const result = await fork(['-c', '.noderc.test.noexists', '-v']);
+  debug(result);
   expect(result.errs).toHaveLength(0);
+  expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stdoutMonitor).toHaveBeenCalledWith(
     expect.stringMatching(
@@ -105,7 +118,9 @@ it('returns an exit code of 0 and logs debug messages when passed a bad config p
 
 it('returns an exit code of 0 when passed a config file with no export', async () => {
   const result = await fork(['-c', '.noderc.test.nofunc']);
+  debug(result);
   expect(result.errs).toHaveLength(0);
+  expect(result).toHaveProperty('signal', null);
   expect(result).toHaveProperty('code', 0);
   expect(result.stderrMonitor).not.toHaveBeenCalled();
 });
@@ -114,8 +129,11 @@ it.each(['.noderc.test.throws', '.noderc.test.throws.nofunc'])(
   'returns an exit code of 1 when the config file throws an error (%s)',
   async (filename) => {
     const result = await fork(['-c', filename]);
+    debug(result);
     expect(result.errs).toHaveLength(0);
+    expect(result).toHaveProperty('signal', null);
     expect(result).toHaveProperty('code', 1);
+
     expect(result.stderrMonitor).toHaveBeenCalledWith(
       expect.stringContaining(
         'An error occurred while loading configuration at',
@@ -133,7 +151,10 @@ if (os.platform() !== 'win32' && semver.gte(process.version, '11.10.0')) {
     const result = await fork(['-c', '.noderc.test'], {
       NODE_REPL_HISTORY: tmpFile.path,
     });
+    debug(result);
+    expect(result).toHaveProperty('signal', null);
     expect(result.errs).toHaveLength(0);
+    // expect(result).toHaveProperty('code', 0); FIXME
     expect(result.stdoutMonitor).toHaveBeenCalledWith(
       expect.stringMatching(/REPL session history will not be persisted/),
     );
