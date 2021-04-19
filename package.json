@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "tsc --build src/",
-    "postbuild": "node -e \"require('fs').chmodSync('./lib/cli.js', 0o755)\"",
+    "postbuild": "node -e \"require('fs').chmodSync('$npm_package_bin_rrepl', 0o755)\"",
     "clean": "tsc --build src/ --clean",
     "lint": "eslint src/",
     "prepack": "npm run clean && npm run build",

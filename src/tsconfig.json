@@ -9,6 +9,7 @@
     "composite": true,
     "declaration": true,
     "esModuleInterop": false,
+    "incremental": true,
     "outDir": "../lib",
     "resolveJsonModule": true,
     "sourceMap": true

@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import { program } from 'commander';
-import * as path from 'path';
-import * as process from 'process';
+import { resolve } from 'path';
 import { createRepl } from './index';
 import { version } from '../package.json';
 
@@ -11,7 +10,7 @@ import { version } from '../package.json';
     program
       .version(version)
       .option('-c, --config <file>', 'configuration file to use', (file) =>
-        path.resolve(file),
+        resolve(file),
       )
       .option('-v, --verbose', 'display verbose logging')
       .parse(process.argv);

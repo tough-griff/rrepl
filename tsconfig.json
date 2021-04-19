@@ -1,11 +1,10 @@
 {
   "extends": "@tsconfig/node10/tsconfig.json",
-  "files": [
-    "package.json"
-  ],
+  "files": ["package.json"],
   "compilerOptions": {
     "composite": true,
     "declaration": true,
+    "incremental": true,
     "outDir": ".",
     "resolveJsonModule": true
   }
