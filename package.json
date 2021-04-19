@@ -81,8 +81,9 @@
     }
   },
   "lint-staged": {
-    "*.ts": "eslint --fix",
-    ".noderc*": "prettier --parser babel --write"
+    "*.js{,on}": "prettier --write",
+    "*.md": "prettier --write",
+    "*.ts": "eslint --fix"
   },
   "prettier": {
     "singleQuote": true,
