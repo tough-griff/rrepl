@@ -2,11 +2,9 @@ name: Test
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 env:
   CI: true
@@ -18,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest, ubuntu-latest, windows-latest]
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [12, 14, 16]
     steps:
       - name: Checkout
         uses: actions/checkout@v2

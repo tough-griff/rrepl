@@ -5,7 +5,6 @@ import * as path from 'path';
 import * as process from 'process';
 import * as readline from 'readline';
 import * as repl from 'repl';
-import * as semver from 'semver';
 import * as chalk from 'chalk';
 import { version } from '../package.json';
 
@@ -32,12 +31,7 @@ const startReplServer = (): Promise<repl.REPLServer> => {
     // move the existing cursor to position 0 so we overwrite the default prompt
     readline.cursorTo(process.stdout, 0);
 
-    // replServer.setupHistory() added in: v11.10.0
-    if (
-      semver.lt(process.version, '11.10.0') ||
-      process.env.NODE_REPL_HISTORY === ''
-    )
-      return resolve(replServer);
+    if (process.env.NODE_REPL_HISTORY === '') return resolve(replServer);
 
     const historyPath =
       process.env.NODE_REPL_HISTORY ||
