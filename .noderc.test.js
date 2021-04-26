@@ -8,7 +8,7 @@ module.exports = (repl) => {
     assert.ok(repl instanceof REPLServer);
     console.log('PASS');
   } catch (err) {
-    console.error('FAIl');
+    console.error('FAIL');
     console.error(err);
   }
 };

@@ -30,7 +30,7 @@ module.exports = (repl) => {
 };
 ```
 
-See [_.noderc.example_](https://github.com/tough-griff/rrepl/blob/main/.noderc.example)
+See [_.noderc.example.js_](https://github.com/tough-griff/rrepl/blob/main/.noderc.example.js)
 as a sample of what you can do with `rrepl`!
 
 ### NODE_OPTIONS
@@ -44,3 +44,15 @@ env NODE_OPTIONS="--experimental-repl-await" rrepl
 ```
 
 to enable top-level await keyword support.
+
+## Programmatic Usage
+
+Furthermore, you can programmatically create a repl with the following:
+
+```js
+import { createRepl } from 'rrepl';
+// or
+const { createRepl } = require('rrepl');
+
+const repl = await createRepl();
+```

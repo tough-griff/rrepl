@@ -1,0 +1,17 @@
+{
+  "extends": "@tsconfig/node10/tsconfig.json",
+  "references": [
+    {
+      "path": ".."
+    }
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "esModuleInterop": false,
+    "incremental": true,
+    "outDir": "../lib",
+    "resolveJsonModule": true,
+    "sourceMap": true
+  }
+}
