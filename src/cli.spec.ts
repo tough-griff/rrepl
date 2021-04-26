@@ -85,6 +85,45 @@ it(
 );
 
 it(
+  'returns an exit code of 0 and logs debug information in verbose mode',
+  async () => {
+    const result = await rrepl(['-c', '.noderc.test.js', '-v']);
+    expect(result.errs).toHaveLength(0);
+    expect(result).toHaveProperty('signal', null);
+    expect(result).toHaveProperty('code', 0);
+    expect(result.stdoutMonitor).toHaveBeenCalledWith(
+      expect.stringMatching(
+        /\[DEBUG\] Configuring history at .*\.node_repl_history/,
+      ),
+    );
+    expect(result.stdoutMonitor).toHaveBeenCalledWith(
+      expect.stringMatching(
+        /\[DEBUG\] Using configuration at .*\.noderc\.test\.js/,
+      ),
+    );
+    expect(result.stderrMonitor).not.toHaveBeenCalled();
+  },
+  TIMEOUT,
+);
+
+it(
+  'returns an exit code of 0 and skips history setup in verbose mode',
+  async () => {
+    const result = await rrepl(['-c', '.noderc.test.js', '-v'], {
+      NODE_REPL_HISTORY: '',
+    });
+    expect(result.errs).toHaveLength(0);
+    expect(result).toHaveProperty('signal', null);
+    expect(result).toHaveProperty('code', 0);
+    expect(result.stdoutMonitor).toHaveBeenCalledWith(
+      expect.stringContaining('[DEBUG] Skipping history setup'),
+    );
+    expect(result.stderrMonitor).not.toHaveBeenCalled();
+  },
+  TIMEOUT,
+);
+
+it(
   'returns an exit code of 0 when defaulting to ~/.noderc',
   async () => {
     const result = await rrepl([], { NODE_REPL_MODE: 'strict' });
@@ -168,7 +207,7 @@ itif(platform() !== 'win32')(
     expect(result.errs).toHaveLength(0);
     // expect(result).toHaveProperty('code', 0); FIXME
     expect(result.stdoutMonitor).toHaveBeenCalledWith(
-      expect.stringMatching(/REPL session history will not be persisted/),
+      expect.stringContaining('REPL session history will not be persisted'),
     );
 
     return tmpFile.cleanup();

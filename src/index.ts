@@ -31,7 +31,10 @@ const startReplServer = (): Promise<repl.REPLServer> => {
     // move the existing cursor to position 0 so we overwrite the default prompt
     readline.cursorTo(process.stdout, 0);
 
-    if (process.env.NODE_REPL_HISTORY === '') return resolve(replServer);
+    if (process.env.NODE_REPL_HISTORY === '') {
+      debug(chalk.gray('[DEBUG] Skipping history setup'));
+      return resolve(replServer);
+    }
 
     const historyPath =
       process.env.NODE_REPL_HISTORY ||
