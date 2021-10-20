@@ -1,4 +1,8 @@
-# rrepl [![npm](https://img.shields.io/npm/v/rrepl.svg)](https://www.npmjs.com/package/rrepl) [![Actions Status](https://github.com/tough-griff/rrepl/workflows/Test/badge.svg)](https://github.com/tough-griff/rrepl/actions) [![codecov](https://codecov.io/gh/tough-griff/rrepl/branch/main/graph/badge.svg)](https://codecov.io/gh/tough-griff/rrepl)
+# rrepl
+
+[![npm](https://img.shields.io/npm/v/rrepl)](https://www.npmjs.com/package/rrepl)
+[![build](https://img.shields.io/github/workflow/status/tough-griff/rrepl/Test)](https://github.com/tough-griff/rrepl/actions/workflows/test.yml)
+[![codecov](https://img.shields.io/codecov/c/github/tough-griff/rrepl)](https://codecov.io/gh/tough-griff/rrepl)
 
 > An improved node REPL with support for configuration.
 

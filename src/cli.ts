@@ -27,7 +27,7 @@ import { version } from '../package.json';
     repl.on('exit', () => {
       process.exit(0);
     });
-  } catch (err) {
+  } catch (err: any) {
     // istanbul ignore if
     if (!err.logged) console.error(err);
     process.exit(1);
