@@ -1,25 +1,22 @@
 #!/usr/bin/env node
 
 import { program } from 'commander';
-import { resolve } from 'path';
-import { createRepl } from './index';
+import * as path from 'path';
+import RREPL, { RREPL_STR } from './index';
 import { version } from '../package.json';
+
+const resolve = (file: string) => path.resolve(file);
 
 (async () => {
   try {
-    program
-      .version(version)
-      .option('-c, --config <file>', 'configuration file to use', (file) =>
-        resolve(file),
-      )
-      .option('-v, --verbose', 'display verbose logging')
-      .parse(process.argv);
+    program.name('rrepl');
+    program.version(version);
+    program.option('-c, --config <file>', 'configuration file to use', resolve);
+    program.option('-v, --verbose', 'display verbose logging');
+    program.addHelpText('before', `${RREPL_STR} v${version}`);
+    program.parse(process.argv);
 
-    const { config, verbose } = program.opts();
-
-    if (verbose) process.env.RREPL_VERBOSE = 'true';
-
-    const repl = await createRepl({ config });
+    const repl = await RREPL.create(program.opts());
 
     // istanbul ignore else
     if (process.send) process.send('init');
