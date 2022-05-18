@@ -18,9 +18,7 @@
     "rrepl": "lib/cli.js"
   },
   "files": [
-    "lib/cli.js",
-    "lib/index.d.ts",
-    "lib/index.js"
+    "lib/"
   ],
   "scripts": {
     "prebuild": "tsc --build --clean src/",
@@ -39,26 +37,26 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
-    "commander": "^9.1.0"
+    "commander": "^9.2.0"
   },
   "devDependencies": {
     "@tough-griff/eslint-config": "^2.0.0",
     "@tsconfig/node12": "^1.0.9",
-    "@types/jest": "^27.4.1",
-    "@types/lodash": "^4.14.180",
-    "@types/node": "^12.20.47",
+    "@types/jest": "^27.5.1",
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^14.18.18",
     "@types/tmp": "^0.2.3",
     "codecov": "^3.8.3",
-    "husky": "^7.0.4",
-    "jest": "^27.5.1",
+    "husky": "^8.0.1",
+    "jest": "^28.1.0",
     "jest-if": "^1.0.1",
-    "lint-staged": "^12.3.7",
+    "lint-staged": "^12.4.2",
     "lodash": "^4.17.21",
     "nyc": "^15.1.0",
     "tmp-promise": "^3.0.3",
-    "ts-jest": "^27.1.3",
-    "ts-node": "^10.7.0",
-    "typescript": "^4.6.2"
+    "ts-jest": "^28.0.3",
+    "ts-node": "^10.8.0",
+    "typescript": "^4.7.2"
   },
   "eslintConfig": {
     "extends": "@tough-griff",

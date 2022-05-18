@@ -1,6 +1,7 @@
 .nyc_output/
 coverage/
 lib/
+!lib/.npmignore
 node_modules/
 
 *.tsbuildinfo

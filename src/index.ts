@@ -34,7 +34,7 @@ export default class RREPL {
     cursorTo(process.stdout, 0);
   }
 
-  debug(message: string, ...args: any[]): void {
+  debug(message: string, ...args: any[]) {
     if (this._verbose) console.log(gray(`[DEBUG] ${message}`), ...args);
   }
 
@@ -49,10 +49,10 @@ export default class RREPL {
       join(this._homedir, '.node_repl_history');
 
     this.debug('Configuring history at %s', historyPath);
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       this.server.setupHistory(historyPath, () => {
         // resolve with the configured server, swallowing any errors
-        resolve(undefined);
+        resolve();
       });
     });
   }

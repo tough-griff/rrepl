@@ -8,6 +8,7 @@ on:
 
 env:
   CI: true
+  HUSKY: 0
 
 jobs:
   test:
@@ -16,14 +17,15 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest, ubuntu-latest, windows-latest]
-        node-version: [12, 14, 16]
+        node-version: [14, 16, 18]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Node v${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - name: Update npm
         shell: bash
         run: npm install -g npm@8
