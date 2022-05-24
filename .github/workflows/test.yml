@@ -10,11 +10,20 @@ env:
   CI: true
   HUSKY: 0
 
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.ref }}/test
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Node v${{ matrix.node-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [macOS-latest, ubuntu-latest, windows-latest]
         node-version: [14, 16, 18]
@@ -27,16 +36,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - name: Update npm
-        shell: bash
         run: npm install -g npm@8
       - name: Install dependencies
-        shell: bash
         run: npm ci
       - name: Run tests
-        shell: bash
         run: npm run test:cov
       - name: Upload coverage to CodeCov
-        shell: bash
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           GITHUB_BRANCH: ${{ github.head_ref || github.ref }}
