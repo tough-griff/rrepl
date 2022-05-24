@@ -45,7 +45,6 @@ describe('RREPL', function () {
     result.close();
 
     expect(result).to.haveOwnProperty('replMode', REPL_MODE_SLOPPY);
-    expect(result).to.haveOwnProperty('_prompt', 'x');
     expect(console.log).to.have.been.calledWith(sinon.match('Welcome'));
   });
 
@@ -103,7 +102,6 @@ describe('RREPL', function () {
     result.close();
 
     expect(result).to.haveOwnProperty('replMode', REPL_MODE_SLOPPY);
-    expect(result).to.haveOwnProperty('_prompt', '> ');
     expect(console.log).to.have.been.calledWith(
       sinon.match('did not export a `rrepl` function'),
     );
