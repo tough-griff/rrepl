@@ -72,7 +72,7 @@ const rrepl = (
 };
 
 describe('CLI', function () {
-  this.timeout(5_000);
+  this.timeout(10_000);
 
   it('returns an exit code of 0', async function () {
     const result = await rrepl(['-c', '.noderc.test.js']);
