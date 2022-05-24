@@ -34,11 +34,11 @@ export default class RREPL {
     cursorTo(process.stdout, 0);
   }
 
-  debug(message: string, ...args: any[]) {
+  debug(message: string, ...args: any[]): void {
     if (this._verbose) console.log(gray(`[DEBUG] ${message}`), ...args);
   }
 
-  async setupHistory() {
+  async setupHistory(): Promise<void> {
     if (process.env.NODE_REPL_HISTORY === '') {
       this.debug('Skipping history setup');
       return undefined;
@@ -57,7 +57,7 @@ export default class RREPL {
     });
   }
 
-  async configure() {
+  async configure(): Promise<void> {
     try {
       await fs.access(this._config, FS.R_OK);
       const noderc = await import(this._config);
