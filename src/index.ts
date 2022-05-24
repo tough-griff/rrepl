@@ -2,13 +2,19 @@ import { constants as FS, promises as fs } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 import { cursorTo } from 'readline';
-import { REPL_MODE_SLOPPY, REPL_MODE_STRICT, REPLServer, start } from 'repl';
+import {
+  REPL_MODE_SLOPPY,
+  REPL_MODE_STRICT,
+  REPLServer,
+  start,
+  ReplOptions,
+} from 'repl';
 import { blue, gray, green, magenta, red, yellow } from 'chalk';
 import { version } from '../package.json';
 
-interface RREPLOpts {
+interface RREPLOpts extends ReplOptions {
   config?: string;
-  verbose: boolean;
+  verbose?: boolean;
 }
 
 export const RREPL_STR =
@@ -20,22 +26,22 @@ export default class RREPL {
   private _verbose: boolean;
   private _homedir = homedir();
 
-  constructor({ config, verbose }: RREPLOpts) {
+  constructor({ config, verbose, ...opts }: RREPLOpts) {
     const replMode =
       process.env.NODE_REPL_MODE === 'strict'
         ? REPL_MODE_STRICT
         : REPL_MODE_SLOPPY;
 
-    this.server = start({ replMode }).pause();
+    this.server = start({ replMode, ...opts }).pause();
 
     this._config = config ?? join(this._homedir, '.noderc');
-    this._verbose = verbose;
+    this._verbose = !!verbose;
 
     cursorTo(process.stdout, 0);
   }
 
   debug(message: string, ...args: any[]): void {
-    if (this._verbose) console.log(gray(`[DEBUG] ${message}`), ...args);
+    if (this._verbose) console.log(gray('[DEBUG]', message), ...args);
   }
 
   async setupHistory(): Promise<void> {
@@ -61,28 +67,24 @@ export default class RREPL {
     try {
       await fs.access(this._config, FS.R_OK);
       const noderc = await import(this._config);
-      if (typeof noderc !== 'function') {
+      if (typeof noderc?.rrepl !== 'function') {
         this.debug(
-          'Configuration at %s did not export a function',
+          'Configuration at %s did not export a `rrepl` function',
           this._config,
         );
         return;
       }
 
       this.debug('Using configuration at %s', this._config);
-      Reflect.apply(noderc, this.server, [this.server]);
+      Reflect.apply(noderc.rrepl, this.server, [this.server]);
     } catch (err: any) {
       if (err.syscall !== 'access' || err.code !== 'ENOENT') {
-        this.server.close();
-
         console.error(
           red('An error occurred while loading configuration at %s:\n%s'),
           this._config,
           err,
         );
-        err.logged = true;
-
-        throw err;
+        return;
       }
 
       this.debug('No configuration found at %s', this._config);

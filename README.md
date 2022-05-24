@@ -23,13 +23,13 @@ npx rrepl
 
 Add a `.noderc` file in your home directory. You can also specify a different
 configuration file with the `-c` or `--config` option. The `.noderc` file should
-export a function which takes a
+export a function named rrepl which takes a
 [`REPLServer`](https://nodejs.org/api/repl.html#repl_class_replserver) instance
 as its argument. This callback is invoked when `rrepl` is run, thus configuring
 your environment.
 
 ```js
-module.exports = (repl) => {
+module.exports.rrepl = (repl) => {
   repl.setPrompt('>> ');
 };
 ```

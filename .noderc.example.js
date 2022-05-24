@@ -49,7 +49,7 @@ const init = (context) => {
  *
  * @param {REPLServer} repl
  */
-module.exports = function configure(repl) {
+module.exports.rrepl = function configure(repl) {
   repl.setPrompt(`${process.version} ${chalk.green('❯')} `);
 
   init(repl.context);
