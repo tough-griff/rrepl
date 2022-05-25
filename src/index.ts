@@ -1,15 +1,14 @@
 import { constants as FS, promises as fs } from 'fs';
-import { homedir } from 'os';
-import { join } from 'path';
-import { cursorTo } from 'readline';
-import {
+import os from 'os';
+import path from 'path';
+import readline from 'readline';
+import repl, {
   REPL_MODE_SLOPPY,
   REPL_MODE_STRICT,
   REPLServer,
-  start,
   ReplOptions,
 } from 'repl';
-import { blue, gray, green, magenta, red, yellow } from 'chalk';
+import chalk from 'chalk';
 import { version } from '../package.json';
 
 interface RREPLOpts extends ReplOptions {
@@ -18,13 +17,17 @@ interface RREPLOpts extends ReplOptions {
 }
 
 export const RREPL_STR =
-  red('r') + yellow('r') + green('e') + blue('p') + magenta('l');
+  chalk.red('r') +
+  chalk.yellow('r') +
+  chalk.green('e') +
+  chalk.blue('p') +
+  chalk.magenta('l');
 
 export default class RREPL {
   server: REPLServer;
   private _config: string;
   private _verbose: boolean;
-  private _homedir = homedir();
+  private _homedir = os.homedir();
 
   constructor({ config, verbose, ...opts }: RREPLOpts) {
     const replMode =
@@ -32,16 +35,16 @@ export default class RREPL {
         ? REPL_MODE_STRICT
         : REPL_MODE_SLOPPY;
 
-    this.server = start({ replMode, ...opts }).pause();
+    this.server = repl.start({ replMode, ...opts }).pause();
 
-    this._config = config ?? join(this._homedir, '.noderc');
+    this._config = config ?? path.join(this._homedir, '.noderc');
     this._verbose = !!verbose;
 
-    cursorTo(process.stdout, 0);
+    readline.cursorTo(process.stdout, 0);
   }
 
   debug(message: string, ...args: any[]): void {
-    if (this._verbose) console.log(gray('[DEBUG]', message), ...args);
+    if (this._verbose) console.log(chalk.gray('[DEBUG]', message), ...args);
   }
 
   async setupHistory(): Promise<void> {
@@ -52,7 +55,7 @@ export default class RREPL {
 
     const historyPath =
       process.env.NODE_REPL_HISTORY ??
-      join(this._homedir, '.node_repl_history');
+      path.join(this._homedir, '.node_repl_history');
 
     this.debug('Configuring history at %s', historyPath);
     return new Promise<void>((resolve) => {
@@ -80,7 +83,7 @@ export default class RREPL {
     } catch (err: any) {
       if (err.syscall !== 'access' || err.code !== 'ENOENT') {
         console.error(
-          red('An error occurred while loading configuration at %s:\n%s'),
+          chalk.red('An error occurred while loading configuration at %s:\n%s'),
           this._config,
           err,
         );
@@ -98,14 +101,14 @@ export default class RREPL {
       version,
       process.version,
     );
-    console.log(gray('Type ".help" for more information.'));
+    console.log(chalk.gray('Type ".help" for more information.'));
 
-    const repl = new RREPL(opts);
-    await repl.setupHistory();
-    await repl.configure();
+    const rrepl = new RREPL(opts);
+    await rrepl.setupHistory();
+    await rrepl.configure();
 
-    repl.server.prompt();
+    rrepl.server.prompt();
 
-    return repl.server;
+    return rrepl.server;
   }
 }

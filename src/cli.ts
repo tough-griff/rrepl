@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { program } from 'commander';
-import * as path from 'path';
+import path from 'path';
 import RREPL, { RREPL_STR } from './index';
 import { version } from '../package.json';
 

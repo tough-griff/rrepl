@@ -1,6 +1,5 @@
 {
   "extends": "@tsconfig/node14/tsconfig.json",
-  "include": ["*.ts"],
   "references": [
     {
       "path": ".."
@@ -9,6 +8,7 @@
   "compilerOptions": {
     "composite": true,
     "declaration": true,
+    "importHelpers": true,
     "incremental": true,
     "outDir": "../lib",
     "resolveJsonModule": true,
