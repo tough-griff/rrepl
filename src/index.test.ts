@@ -1,4 +1,3 @@
-// import path from 'path';
 import chaiAsPromised from 'chai-as-promised';
 import chai, { expect } from 'chai';
 import os from 'os';
